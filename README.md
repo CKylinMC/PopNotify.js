@@ -1,6 +1,8 @@
 # PopNotify.js
 一个简单的通知条js，练手项目。
 
+![PopNotify.js](image.png)
+
 ## 引入
 ```html
 <link rel="stylesheet" href="PopNotify.css">
