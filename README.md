@@ -23,7 +23,7 @@ popNotify.notify(title, content, timeout, onclick, style)
 * **timeout:** 超时，通知要显示多少毫秒。
  * 不设置或`null`值时，默认显示5秒。
 * **onclick:** 点击回调，当通知被点击时执行。
- * 回调的参数是当次点击事件。
+ * 回调的第一个参数是事件，第二个参数是对应实例，回调返回`true`时关闭通知，否则通知会等待超时才会关闭。
 * **style:** 预设样式名称。
  * 默认预设有`null`(黑白)、`info`、`success`、`warn`、`error`四种。
  
