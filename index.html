@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PopNotify</title>
+    <link rel="stylesheet" href="PopNotify.css">
+</head>
+
+<body>
+<a href="javascript:void(0)" onclick="triggerNotify()">普通</a>
+<a href="javascript:void(0)" onclick="triggerColorfulNotify()">多彩</a>
+
+</body>
+<script src="PopNotify.js"></script>
+<script>
+    function triggerNotify() {
+        popNotify.notify("Hello~", "Click to close!", null, 5000);
+    }
+    function triggerColorfulNotify(){
+        popNotify.notify("Style: info","Click me and see the console!",(e)=>{console.log("clicked info!");popNotify.close(e.target);},5000,"info");
+        popNotify.notify("Style: success","Click me and see the console!",(e)=>{console.log("clicked success!");popNotify.close(e.target);},5000,"success");
+        popNotify.notify("Style: warn","Click me and see the console!",(e)=>{console.log("clicked warn!");popNotify.close(e.target);},5000,"warn");
+        popNotify.notify("Style: error","Click me and see the console!",(e)=>{console.log("clicked error!");popNotify.close(e.target);},5000,"error");
+    }
+</script>
+</html>
