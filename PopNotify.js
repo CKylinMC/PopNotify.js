@@ -3,7 +3,7 @@ function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
         this.title = title;
         this.content = content;
         this.onclick = onclick instanceof Function ? onclick : this.close(this);
-        this.timeout = timeout;
+        this.timeout = timeout||5000;
         this.id = "PNU_" + Math.floor(Math.random() * 1000000) + new Date().getMilliseconds().toString();
         this.posRight = 20;
         this.posTop = window.popNotify.getNextYPos();
@@ -94,7 +94,7 @@ function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
 
 var popNotify = {
     queue: [],
-    notify: function (title, content, onclick, timeout, style) {
+    notify: function (title, content, timeout, onclick, style) {
         var n = new popNotifyUnit(title, content, onclick, timeout, style, true);
         this.queue.push(n);
         this.refresh();

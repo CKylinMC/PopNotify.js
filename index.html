@@ -17,13 +17,13 @@
 <script src="PopNotify.js"></script>
 <script>
     function triggerNotify() {
-        popNotify.notify("Hello~", "Click to close!", null, 5000);
+        popNotify.notify("Hello~", "Click to close!", 5000);
     }
     function triggerColorfulNotify(){
-        popNotify.notify("Style: info","Click me and see the console!",(e)=>{console.log("clicked info!");popNotify.close(e.target);},5000,"info");
-        popNotify.notify("Style: success","Click me and see the console!",(e)=>{console.log("clicked success!");popNotify.close(e.target);},5000,"success");
-        popNotify.notify("Style: warn","Click me and see the console!",(e)=>{console.log("clicked warn!");popNotify.close(e.target);},5000,"warn");
-        popNotify.notify("Style: error","Click me and see the console!",(e)=>{console.log("clicked error!");popNotify.close(e.target);},5000,"error");
+        popNotify.notify("Style: info","Click me and see the console!",5000,(e)=>{console.log("clicked info!");popNotify.close(e.target);},"info");
+        popNotify.notify("Style: success","Click me and see the console!",5000,(e)=>{console.log("clicked success!");popNotify.close(e.target);},"success");
+        popNotify.notify("Style: warn","Click me and see the console!",5000,(e)=>{console.log("clicked warn!");popNotify.close(e.target);},"warn");
+        popNotify.notify("Style: error","Click me and see the console!",5000,(e)=>{console.log("clicked error!");popNotify.close(e.target);},"error");
     }
 </script>
 </html>
