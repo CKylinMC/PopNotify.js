@@ -1,4 +1,11 @@
-function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
+/**
+ * PopNotify.js
+ * @author CKylinMC
+ * @version 1.0
+ */
+
+
+function popNotifyUnit(title, content, onclick, timeout, style, autoshow) {
     this.constructor = function (title, content, onclick, timeout) {
         this.title = title;
         this.content = content;
@@ -10,6 +17,7 @@ function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
         this.timer;
         this.style = style;
         this.showing = false;
+        this.destoried = false;
         // window[this.id] = this;
         if (autoshow) this.show();
     }
@@ -33,6 +41,11 @@ function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
         el.style.top = this.posTop + "px";
         el.style.right = this.posRight + "px";
     }
+    this.clicked = function (e,ev) {
+        return function () {
+            if(e.onclick(ev,e)!=false) e.destory();
+        }
+    }
     this.show = function () {
         if (this.timer) clearTimeout(this.timer);
         var el = document.querySelector("#" + this.id);
@@ -40,7 +53,7 @@ function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
         el = document.createElement("div");
         el.id = this.id;
         el.className = "popNotifyUnitFrame" + (this.style ? " popStyle-" + this.style : "");
-        el.onclick = this.onclick;
+        el.onclick = this.clicked(this);
         el.style.top = this.posTop+"px";
         el.style.right = this.posRight + "px";
         if (this.title != null) {
@@ -68,6 +81,8 @@ function popNotifyUnit(title, content, onclick, timeout ,style ,autoshow) {
         }
     }
     this.destory = function (force) {
+        if (this.destoried) return;
+        this.destoried = true;
         this.showing = false;
         if (this.timer) clearTimeout(this.timer);
         var el = document.querySelector("#" + this.id);
