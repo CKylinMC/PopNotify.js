@@ -113,6 +113,7 @@ function popNotifyUnit(title, content, onclick, timeout, style, autoshow) {
 
 var popNotify = {
     queue: [],
+    closingAll: false,
     show: function(title = null, content = null, style = "", timeout = 5, onclick = null){
         this.notify(title, content, timeout*1000, onclick, style);
     },
@@ -135,6 +136,7 @@ var popNotify = {
         return n;
     },
     cleanUp: function (obj) {
+        if(this.closingAll) return;
         if (obj) this.queue.forEach((item, index) => {
             if (item === obj) this.queue.splice(index, 1);
         });
@@ -197,7 +199,9 @@ var popNotify = {
         obj.destory();
     },
     closeAll: function () {
+        this.closingAll = true;
         this.queue.forEach(item => item.destory());
         this.queue = [];
+        this.closingAll = false;
     }
 };
