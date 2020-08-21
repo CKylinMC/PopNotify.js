@@ -14,20 +14,36 @@
 popNotify.notify("Hello~", "Click to close!", 5000);
 ```
 
+1.1版本后，还可以使用：
+```js
+popNotify.show("Hello","world","info");
+```
+
+> 添加 `popNotify.show()` 方法是因为原 `popNotify.notify()` 的参数顺序不合理，但是为了不破坏已经这样调用的程序，添加了新的方法。
+> `show()`与`notify()`除了参数顺序以外，还把超时的单位由毫秒改为了秒，除了这两点以外`show()`与`notify()`完全一致。
+
 ### 参数解释
 ```js
 popNotify.notify(title, content, timeout, onclick, style)
+popNotify.show(title, content, style, timeout, onclick)
+popNotify.info(title, content, timeout, onclick)
+popNotify.warn(title, content, timeout, onclick)
+popNotify.error(title, content, timeout, onclick)
+popNotify.success(title, content, timeout, onclick)
 ```
 * **title:** 通知标题，设为`null`来跳过标题。
   * 设置为`null`时不会为标题留空，如果需要留空，请设为`""`。
 * **content:** 通知内容，设为`null`来跳过内容。
   * 设置为`null`时不会为内容留空，如果需要留空，请设为`""`。
-* **timeout:** 超时，通知要显示多少毫秒。
+* **timeout:** 超时，通知要显示多少秒 (在`popNotify.notify()`中单位是毫秒)。
   * 不设置或`null`值时，默认显示5秒。
 * **onclick:** 点击回调，当通知被点击时执行。
   * 回调的第一个参数是事件，第二个参数是对应实例，回调返回`true`时关闭通知，否则通知会等待超时才会关闭。
+  * 如果参数不是可执行的对象则被忽略。
+  * 设置回调后需要自己添加除超时以外的关闭方式，默认的点击关闭功能会被覆盖。
 * **style:** 预设样式名称。
   * 默认预设有`null`(黑白)、`info`、`success`、`warn`、`error`四种。
+  * 可以添加样式表来扩展这里可以填写的值，未知的样式默认使用黑白样式。
  
 ## 样式
 已经默认预设了四种样式，并且可以自行添加。
@@ -44,6 +60,7 @@ popNotify.notify(title, content, timeout, onclick, style)
     color: rgb(255, 66, 66) !important; /* 通知文字颜色 */
 }
 
+/* 1.1版本新增的进度条 */
 .popStyle-new .popNotifyUnitBar{
     background: rgb(255, 66, 66) !important; /* 进度条颜色，设置为透明来隐藏 */
 }
