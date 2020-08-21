@@ -26,6 +26,12 @@ div.popNotifyUnitFrame{
     /*padding: 6px 12px;*/
     overflow: hidden;
 }
+div.popNotifyUnitFrame>*:not(i):nth-child(1){
+    margin-bottom: 0;
+}
+div.popNotifyUnitFrame>*:not(i):nth-child(2){
+    margin-top: 0;
+}
 .popNotifyUnitTitle,.popNotifyUnitContent{
     transform: translateX(50px);
     opacity: 0;
@@ -36,10 +42,6 @@ div.popNotifyUnitFrame{
 .popNotifyUnitTitle{
     font-weight: bold;
     font-size: 120%;
-    margin-bottom: 0;
-}
-.popNotifyUnitContent{
-    margin-top: 0;
 }
 .popNotifyUnitBar{
     display: block;
