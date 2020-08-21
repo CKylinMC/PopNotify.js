@@ -1,3 +1,9 @@
+/**
+    PopNotify.css
+    @author CKylinMC
+    @version 1.1
+    @license MIT
+*/
 div.popNotifyUnitFrame{
     cursor: pointer;
     box-shadow: 0 3px 6px #80808085;
@@ -17,17 +23,34 @@ div.popNotifyUnitFrame{
     /* animation: pnin forwards .8s cubic-bezier(0.04, 1.01, 0.17, 1.04); */
     animation: pnin forwards .8s cubic-bezier(0.1, 1, 0, 1.05);
     transition: .3s;
-    padding: 6px 12px;
+    /*padding: 6px 12px;*/
+    overflow: hidden;
 }
 .popNotifyUnitTitle,.popNotifyUnitContent{
     transform: translateX(50px);
     opacity: 0;
     min-height: 30px;
     height: fit-content;
+    margin: 6px 12px;
 }
 .popNotifyUnitTitle{
     font-weight: bold;
     font-size: 120%;
+    margin-bottom: 0;
+}
+.popNotifyUnitContent{
+    margin-top: 0;
+}
+.popNotifyUnitBar{
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 0%;
+    background: black;
+    transition-timing-function: linear;
+    transition-property: width;
 }
 
 .popStyle-success {
@@ -37,23 +60,30 @@ div.popNotifyUnitFrame{
 .popStyle-success .popNotifyUnitContent {
     color: rgb(0, 114, 70) !important;
 }
+.popStyle-success .popNotifyUnitBar{
+    background: rgb(0, 114, 70) !important;
+}
 
 .popStyle-info {
     background: rgb(195, 226, 255) !important;
 }
-
 .popStyle-info .popNotifyUnitTitle,
 .popStyle-info .popNotifyUnitContent {
     color: rgb(0, 80, 155) !important;
+}
+.popStyle-info .popNotifyUnitBar{
+    background: rgb(0, 80, 155) !important;
 }
 
 .popStyle-error {
     background: rgb(255, 196, 196) !important;
 }
-
 .popStyle-error .popNotifyUnitTitle,
 .popStyle-error .popNotifyUnitContent {
     color: rgb(255, 66, 66) !important;
+}
+.popStyle-error .popNotifyUnitBar{
+    background: rgb(255, 66, 66) !important;
 }
 
 .popStyle-warn {
@@ -62,6 +92,9 @@ div.popNotifyUnitFrame{
 .popStyle-warn .popNotifyUnitTitle,
 .popStyle-warn .popNotifyUnitContent {
     color: rgb(177, 94, 0) !important;
+}
+.popStyle-warn .popNotifyUnitBar{
+    background: rgb(177, 94, 0) !important;
 }
 
 @keyframes pnin {
