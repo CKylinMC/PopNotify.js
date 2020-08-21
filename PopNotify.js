@@ -114,6 +114,21 @@ function popNotifyUnit(title, content, onclick, timeout, style, autoshow) {
 
 var popNotify = {
     queue: [],
+    show: function(title = null, content = null, style = "", timeout = 5, onclick = null){
+        this.notify(title, content, timeout*1000, onclick, style);
+    },
+    success: function(title = null, content = null, timeout = 5, onclick = null){
+        this.show(title, content, "success", timeout, onclick);
+    },
+    info: function(title = null, content = null, timeout = 5, onclick = null){
+        this.show(title, content, "info", timeout, onclick);
+    },
+    warn: function(title = null, content = null, timeout = 5, onclick = null){
+        this.show(title, content, "warn", timeout, onclick);
+    },
+    error: function(title = null, content = null, timeout = 5, onclick = null){
+        this.show(title, content, "error", timeout, onclick);
+    },
     notify: function (title, content, timeout, onclick, style) {
         let n = new popNotifyUnit(title, content, onclick, timeout, style, true);
         this.queue.push(n);
