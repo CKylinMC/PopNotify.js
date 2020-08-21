@@ -36,16 +36,16 @@ popNotify.notify(title, content, timeout, onclick, style)
 
 ```css
 .popStyle-new {
-    background: rgb(255, 196, 196) !important;//通知背景颜色
+    background: rgb(255, 196, 196) !important; /* 通知背景颜色 */
 }
 
 .popStyle-new .popNotifyUnitTitle,
 .popStyle-new .popNotifyUnitContent {
-    color: rgb(255, 66, 66) !important;//通知文字颜色
+    color: rgb(255, 66, 66) !important; /* 通知文字颜色 */
 }
 
 .popStyle-new .popNotifyUnitBar{
-    background: rgb(255, 66, 66) !important;//进度条颜色，设置为透明来隐藏
+    background: rgb(255, 66, 66) !important; /* 进度条颜色，设置为透明来隐藏 */
 }
 ```
 之后便可使用`new`的名字调用这些样式。
