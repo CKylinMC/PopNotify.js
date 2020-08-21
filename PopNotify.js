@@ -73,11 +73,10 @@ function popNotifyUnit(title, content, onclick, timeout, style, autoshow) {
         }
         let b = document.createElement("i");
         b.className = "popNotifyUnitBar";
-        b.style.transitionDuration = (this.timeout/1000)+"s";
+        b.style.animationDuration = (this.timeout/1000)+"s";
         el.appendChild(b);
         this.timer = setTimeout(this.close(this),this.timeout);
         document.body.appendChild(el);
-        setTimeout(()=>b.style.width = "100%",10);
         this.showing = true;
     };
     this.close = function (e) {
