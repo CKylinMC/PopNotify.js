@@ -16,6 +16,9 @@
 </body>
 <script src="PopNotify.js"></script>
 <script>
+    popNotify.show({
+        title: 'PopNotify',content: 'popNotify'
+    })
     function triggerNotify() {
         popNotify.notify("Hello~", "Click to close!", 5000);
     }
