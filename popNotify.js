@@ -1,4 +1,10 @@
-(function () {
+/**
+ * PopNotify.js
+ * @version 2.0.0 preview 1
+ * @author CKylinMC
+ * @license MIT
+ */
+ (function () {
     class EventEmitter {
         events = {};
         on(name, fn) {
@@ -112,14 +118,14 @@
         }
         pause() {
             this.clear();
-            this.remain = this.total - (this.startAt - Date.now());
+            this.remain = this.remain - (Date.now() - this.startAt);
             this.emitter.emit('paused', this.remain);
             return this;
         }
         resume() {
             if (this.timer) return (console.warn('[Timer] Already running.'), this);
             this.startAt = Date.now();
-            this.timer = setTimeout(this._end, this.remain);
+            this.timer = setTimeout(()=>this._end(), this.remain);
             Timer.timeouts.push(this);
             return this;
         }
@@ -140,11 +146,12 @@
                 timeout: 1000 * 5,
                 className: '',
             }, options);
+            if(this.opt.timeout!==0) this.opt.timeout = isNaN(this.opt.timeout)? 1000 * 5 : this.opt.timeout;
             if (!this.opt.context) {
                 throw new Error("Need PopNotify host");
             }
             this.showing = false;
-            this.timer = new Timer(this.opt.timeout);
+            this.timer = new Timer(this.opt.timeout??10009*5);
             this.timer.callback(() => this.close());
             this.el = null;
             this.spawn();
@@ -154,19 +161,29 @@
             this.el?.remove();
             this.el = document.createElement('div');
             this.el.id = Unit.prefix + Math.floor(Math.random() * 1000000);
-            this.el.className = [Unit.prefix + 'container', Unit.prefix + "-theme-" + this.opt.theme, this.opt.className].filter(i => i && i.length).join(' ');
+            this.el.className = [Unit.prefix + 'container', Unit.prefix + "theme-" + this.opt.theme, this.opt.className].filter(i => i && i.length).join(' ');
             this.titleEl = document.createElement('div');
-            this.titleEl.className = Unit.prefix + "-title";
+            this.titleEl.className = Unit.prefix + "title";
+            this.titleEl.addEventListener('click', this.opt.onclick);
             this.el.appendChild(this.titleEl);
             this.contentEl = document.createElement('div');
-            this.contentEl.className = Unit.prefix + "-content";
+            this.contentEl.className = Unit.prefix + "content";
+            this.contentEl.addEventListener('click', this.opt.onclick);
             this.el.appendChild(this.contentEl);
             this.buttonsEl = document.createElement('div');
-            this.buttonsEl.className = Unit.prefix + "-buttons";
+            this.buttonsEl.className = Unit.prefix + "buttons";
             this.el.appendChild(this.buttonsEl);
-            this.timerEl = document.createElement('div');
-            this.timerEl.className = Unit.prefix + "-timer";
-            this.el.appendChild(this.timerEl);
+            if(this.opt.timeout!==0){
+                const style = document.createElement('style');
+                style.appendChild(document.createTextNode(`#${this.el.id}-timer::after {
+                    animation: PN2U-anim-progress ${this.opt.timeout/1000}s linear forwards;
+                }`));
+                this.timerEl = document.createElement('div');
+                this.timerEl.id = `${this.el.id}-timer`;
+                this.timerEl.className = Unit.prefix + "timer";
+                this.el.appendChild(style);
+                this.el.appendChild(this.timerEl);
+            }
             this.el.addEventListener('mouseenter', () => this.timer.pause());
             this.el.addEventListener('mouseleave', () => this.timer.resume());
         }
@@ -202,13 +219,17 @@
             this.setContent(this.opt.content,raw);
             this.setButtons(this.opt.btns??[]);
             this.opt.context.showUnit(this);
+            this.el.classList.add('PN2U-do-enter');
+        }
+        startTimer(){
             if(this.opt.timeout>0)this.timer.start();
         }
         close() {
             this.opt.context.hideUnit(this);
         }
         destory(){
-            this.el.classlist.add(Unit.prefix + '-do-exit');
+            this.el.classList.remove('PN2U-do-enter');
+            this.el.classList.add('PN2U-do-exit');
             setTimeout(() => {
                 this.el.remove();
             },500);
@@ -227,18 +248,16 @@
         static RightBottom = {
             bottom: "20px",
             right: "20px",
-            reverted: true//not implemented
         }
         static LeftBottom = {
             bottom: "20px",
             left: "20px",
-            reverted: true//not implemented
         }
         static importStyle() {
             const old = document.querySelector("style#PN2-styles");
             if (old) old.remove();
             const style = document.createElement("style");
-            style.appendChild(document.createTextNode(`.PN2-container { position: fixed; min-width: 250px; width: -webkit-max-content; width: -moz-max-content; width: max-content; height: 100vh; overflow: hidden; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; z-index: 99999; } .PN2U-container { position: fixed; -webkit-transition: all 0.3s ease; -o-transition: all 0.3s ease; transition: all 0.3s ease; margin: 10px 20px; line-height: 24px; min-width: 200px; max-width: 60vw; width: -webkit-max-content; width: -moz-max-content; width: max-content; height: -webkit-fit-content; height: -moz-fit-content; height: fit-content; border-radius: 6px; min-height: 30px; overflow: hidden; -webkit-box-shadow: 0 3px 6px #8080805f; box-shadow: 0 3px 6px #8080805f; -webkit-animation: PN2U-anim-in 0.6s cubic-bezier(0.1, 1, 0, 1) forwards; animation: PN2U-anim-in 0.6s cubic-bezier(0.1, 1, 0, 1) forwards; } .PN2U-title{ padding: 3px 5px; opacity: 0; word-break: break-all; -webkit-animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .2s; animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .2s; } .PN2U-content{ padding: 3px 5px; opacity: 0; word-break: break-all; -webkit-animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .3s; animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .3s; } .PN2U-buttons{ opacity: 0; -webkit-animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .4s; animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .4s; margin: 0; padding: 0; width: 100%; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -ms-flex-direction: row; flex-direction: row; -ms-flex-wrap: nowrap; flex-wrap: nowrap; -ms-flex-line-pack: stretch; align-content: stretch; -ms-flex-pack: distribute; justify-content: space-around; -webkit-box-align: stretch; -ms-flex-align: stretch; align-items: stretch; height: 24px; } .PN2U-buttons:empty{ display: none!important; } .PN2U-buttons>button{ -webkit-transition: all .3s ease; -o-transition: all .3s ease; transition: all .3s ease; border:none; background: rgba(255, 255, 255, 0.358); -webkit-box-flex: 1; -ms-flex: 1; flex: 1; border-left: 2px solid rgba(255, 255, 255, 0.436); text-shadow: 0px 0px 3px #00000063; } .PN2U-buttons>button:first-child{ border-left: none; } .PN2U-buttons>button:hover{ background: rgba(255, 255, 255, 0.557); } .PN2U-timer{ width: 100%; height:2px; background: rgba(255, 255, 255, 0.358); } .PN2U-timer::after{ content: " "; display: block; -webkit-transition: all .3s; -o-transition: all .3s; transition: all .3s; height:2px; width: 50%; background-color: white; -webkit-animation: PN2U-anim-progress 5s linear forwards; animation: PN2U-anim-progress 5s linear forwards; } .PN2U-container:hover> .PN2U-timer::after{ -webkit-animation-play-state:paused; animation-play-state:paused; } .PN2-pause-anim{ -webkit-animation-play-state:paused; animation-play-state:paused; } .PN2-theme-white{ background: rgb(255, 255, 255); color: black; } .PN2-theme-dark{ background: rgb(82, 82, 82); color: rgb(255, 255, 255); } .PN2-theme-dark button{ color: rgb(255, 255, 255); } .PN2-theme-dark .PN2U-buttons{ background: rgb(28, 28, 28); } .PN2-theme-blue{ background: rgb(29, 153, 255); color: rgb(255, 255, 255); } .PN2-theme-blue button{ color: rgb(255, 255, 255); } .PN2-theme-blue .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2-theme-green{ background: rgb(37, 196, 37); color: rgb(255, 255, 255); } .PN2-theme-green button{ color: rgb(255, 255, 255); } .PN2-theme-green .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2-theme-red{ background: rgb(185, 13, 13); color: rgb(255, 255, 255); } .PN2-theme-red button{ color: rgb(255, 255, 255); } .PN2-theme-red .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2-theme-yellow{ background: rgb(217, 192, 3); color: rgb(255, 255, 255); } .PN2-theme-yellow button{ color: rgb(255, 255, 255); } .PN2-theme-yellow .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2-theme-orange{ background: rgb(217, 131, 3); color: rgb(255, 255, 255); } .PN2-theme-orange button{ color: rgb(255, 255, 255); } .PN2-theme-orange .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } @-webkit-keyframes PN2U-anim-in { from { -webkit-transform: scale(0); transform: scale(0); opacity: 0; } to { -webkit-transform: scale(1); transform: scale(1); opacity: 1; } } @keyframes PN2U-anim-in { from { -webkit-transform: scale(0); transform: scale(0); opacity: 0; } to { -webkit-transform: scale(1); transform: scale(1); opacity: 1; } } @-webkit-keyframes PN2U-anim-out { from { -webkit-transform: scale(1); transform: scale(1); opacity: 0; } to { -webkit-transform: scale(0); transform: scale(0); opacity: 1; } } @keyframes PN2U-anim-out { from { -webkit-transform: scale(1); transform: scale(1); opacity: 0; } to { -webkit-transform: scale(0); transform: scale(0); opacity: 1; } } @-webkit-keyframes PN2U-anim-text-in { from { -webkit-transform: translateY(8px); transform: translateY(8px); opacity: 0; } to { -webkit-transform: translateY(0px); transform: translateY(0px); opacity: 1; } } @keyframes PN2U-anim-text-in { from { -webkit-transform: translateY(8px); transform: translateY(8px); opacity: 0; } to { -webkit-transform: translateY(0px); transform: translateY(0px); opacity: 1; } } @-webkit-keyframes PN2U-anim-progress{ from{ width: 0%; } to{ width: 100%; } } @keyframes PN2U-anim-progress{ from{ width: 0%; } to{ width: 100%; } }`));
+            style.appendChild(document.createTextNode(`.PN2-container { position: fixed; min-width: 250px; width: -webkit-max-content; width: -moz-max-content; width: max-content; height: 100vh; overflow: hidden; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; z-index: 99999; } .PN2U-container { position: fixed; -webkit-transition: all 0.3s ease; -o-transition: all 0.3s ease; transition: all 0.3s ease; margin: 10px 20px; line-height: 24px; min-width: 200px; max-width: 60vw; width: -webkit-max-content; width: -moz-max-content; width: max-content; height: -webkit-fit-content; height: -moz-fit-content; height: fit-content; border-radius: 6px; min-height: 30px; overflow: hidden; -webkit-box-shadow: 0 3px 6px #8080805f; box-shadow: 0 3px 6px #8080805f; } .PN2U-do-enter{ -webkit-animation: PN2U-anim-in 0.6s cubic-bezier(0.1, 1, 0, 1) forwards; animation: PN2U-anim-in 0.6s cubic-bezier(0.1, 1, 0, 1) forwards; } .PN2U-do-exit{ -webkit-animation: PN2U-anim-out 0.6s cubic-bezier(0.1, 1, 0, 1) forwards; animation: PN2U-anim-out 0.6s cubic-bezier(0.1, 1, 0, 1) forwards; } .PN2U-title{ padding: 6px 12px 3px 12px; opacity: 0; font-size: larger; word-break: break-all; -webkit-animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .2s; animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .2s; } .PN2U-content{ padding: 3px 12px 6px 12px; opacity: 0; -webkit-filter: opacity(0.8); filter: opacity(0.8); word-break: break-all; -webkit-animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .3s; animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .3s; } .PN2U-buttons{ opacity: 0; -webkit-animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .4s; animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .4s; margin: 0; padding: 0; width: 100%; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -ms-flex-direction: row; flex-direction: row; -ms-flex-wrap: nowrap; flex-wrap: nowrap; -ms-flex-line-pack: stretch; align-content: stretch; -ms-flex-pack: distribute; justify-content: space-around; -webkit-box-align: stretch; -ms-flex-align: stretch; align-items: stretch; height: 24px; } .PN2U-buttons:empty{ display: none!important; } .PN2U-buttons>button{ -webkit-transition: all .3s ease; -o-transition: all .3s ease; transition: all .3s ease; border:none; background: rgba(255, 255, 255, 0.358); -webkit-box-flex: 1; -ms-flex: 1; flex: 1; border-left: 2px solid rgba(255, 255, 255, 0.436); text-shadow: 0px 0px 3px #00000063; } .PN2U-buttons>button:first-child{ border-left: none; } .PN2U-buttons>button:hover{ background: rgba(255, 255, 255, 0.557); } .PN2U-timer{ width: 100%; height:2px; background: rgba(255, 255, 255, 0.358); } .PN2U-timer::after{ content: " "; display: block; -webkit-transition: all .3s; -o-transition: all .3s; transition: all .3s; height:2px; width: 50%; background-color: white; } .PN2-pause-anim .PN2U-timer, .PN2-pause-anim .PN2U-timer::after, .PN2U-container:hover .PN2U-timer::after{ -webkit-animation-play-state:paused!important; animation-play-state:paused!important; } .PN2U-theme-white{ background: rgb(255, 255, 255); color: black; } .PN2U-theme-dark{ background: rgb(82, 82, 82); color: rgb(255, 255, 255); } .PN2U-theme-dark button{ color: rgb(255, 255, 255); } .PN2U-theme-dark .PN2U-buttons{ background: rgb(28, 28, 28); } .PN2U-theme-blue{ background: rgb(29, 153, 255); color: rgb(255, 255, 255); } .PN2U-theme-blue button{ color: rgb(255, 255, 255); } .PN2U-theme-blue .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2U-theme-green{ background: rgb(37, 196, 37); color: rgb(255, 255, 255); } .PN2U-theme-green button{ color: rgb(255, 255, 255); } .PN2U-theme-green .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2U-theme-red{ background: rgb(185, 13, 13); color: rgb(255, 255, 255); } .PN2U-theme-red button{ color: rgb(255, 255, 255); } .PN2U-theme-red .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2U-theme-yellow{ background: rgb(217, 192, 3); color: rgb(255, 255, 255); } .PN2U-theme-yellow button{ color: rgb(255, 255, 255); } .PN2U-theme-yellow .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } .PN2U-theme-orange{ background: rgb(217, 131, 3); color: rgb(255, 255, 255); } .PN2U-theme-orange button{ color: rgb(255, 255, 255); } .PN2U-theme-orange .PN2U-buttons{ background: rgba(255, 255, 255, 0.046); } @-webkit-keyframes PN2U-anim-in { from { -webkit-transform: scale(0); transform: scale(0); opacity: 0; } to { -webkit-transform: scale(1); transform: scale(1); opacity: 1; } } @keyframes PN2U-anim-in { from { -webkit-transform: scale(0); transform: scale(0); opacity: 0; } to { -webkit-transform: scale(1); transform: scale(1); opacity: 1; } } @-webkit-keyframes PN2U-anim-out { from { -webkit-transform: scale(1); transform: scale(1); opacity: 0; } to { -webkit-transform: scale(0); transform: scale(0); opacity: 1; } } @keyframes PN2U-anim-out { from { -webkit-transform: scale(1); transform: scale(1); opacity: 0; } to { -webkit-transform: scale(0); transform: scale(0); opacity: 1; } } @-webkit-keyframes PN2U-anim-text-in { from { -webkit-transform: translateY(8px); transform: translateY(8px); opacity: 0; } to { -webkit-transform: translateY(0px); transform: translateY(0px); opacity: 1; } } @keyframes PN2U-anim-text-in { from { -webkit-transform: translateY(8px); transform: translateY(8px); opacity: 0; } to { -webkit-transform: translateY(0px); transform: translateY(0px); opacity: 1; } } @-webkit-keyframes PN2U-anim-progress{ from{ width: 0%; } to{ width: 100%; } } @keyframes PN2U-anim-progress{ from{ width: 0%; } to{ width: 100%; } }`));
             document.head.appendChild(style);
         }
         static prefix = "PN2-";
@@ -269,10 +288,31 @@
                 opts: this.opts,
             }
         }
-        info({ title, content, btns, onclick, timeout, className }) {
-            const unit = new Unit({ theme: 'blue', context: this, title, content, btns, onclick, timeout, className });
+        info(opt={}){
+            this._send('blue',opt);
+        }
+        warning(opt={}){
+            this._send('orange',opt);
+        }
+        success(opt={}){
+            this._send('green',opt);
+        }
+        error(opt={}){
+            this._send('red',opt);
+        }
+        dark(opt={}){
+            this._send('dark',opt);
+        }
+        white(opt={}){
+            this._send('white',opt);
+        }
+        show(opt){
+            const unit = new Unit(opt);
             unit.show();
             return unit;
+        }
+        _send(theme, opt={}) {
+            return this.show({ theme, context: this, title:opt.title??'', content:opt.content??'', btns:opt.btns??[], onclick:opt.onclick??(()=>{}), timeout:opt.timeout??5*1000, className:opt.className??'' })
         }
         showUnit(unit) {
             this.stack.push(unit);
@@ -290,16 +330,17 @@
             }
         }
         triggerPushStack() {
-            while (this.showing.length < this.opts.max && this.stack.length) {
+            while ((this.opts.max<=0||this.showing.length < this.opts.max) && this.stack.length) {
                 const newitem = this.stack.shift();
                 this.showing.push(newitem);
-                this.el.appendChild(newitem);
+                this.el.appendChild(newitem.el);
+                newitem.startTimer();
             }
             this.refreshPositions();
         }
         addpx(...args) {
             // let 5px + 5px
-            let intval = args.map(i => +i.replace('px', ''));
+            let intval = args.map(i => +(i+'').replace('px', ''));
             // summary by reduce
             let sum = intval.reduce(function (sum, val) {
                 return sum + val;
@@ -322,4 +363,6 @@
         }
     }
     window.PopNotify = PopNotify;
+    window.popNotify = new PopNotify;
+    window.PopNotifyUnit = Unit;
 })();

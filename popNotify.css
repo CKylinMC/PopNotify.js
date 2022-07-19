@@ -1,0 +1,216 @@
+/**
+ * PopNotify.js
+ * @version 2.0.0 preview 1
+ * @author CKylinMC
+ * @license MIT
+ * This is the source stylesheet rules used by popNotify.js.
+ * You dont need to import it manually, it already contained in the script.
+ */
+
+ .PN2-container {
+    position: fixed;
+    min-width: 250px;
+    width: max-content;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 99999;
+}
+.PN2U-container {
+    position: fixed;
+    transition: all 0.3s ease;
+    margin: 10px 20px;
+    line-height: 24px;
+    min-width: 200px;
+    max-width: 60vw;
+    width: max-content;
+    height: fit-content;
+    border-radius: 6px;
+    min-height: 30px;
+    overflow: hidden;
+    box-shadow: 0 3px 6px #8080805f;
+}
+.PN2U-do-enter{
+    animation: PN2U-anim-in 0.6s cubic-bezier(0.1, 1, 0, 1) forwards;
+}
+.PN2U-do-exit{
+    animation: PN2U-anim-out 0.6s cubic-bezier(0.1, 1, 0, 1) forwards;
+}
+.PN2U-title{
+    padding: 6px 12px 3px 12px;
+    opacity: 0;
+    font-size: larger;
+    word-break: break-all;
+    animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .2s;
+}
+.PN2U-content{
+    padding: 3px 12px 6px 12px;
+    opacity: 0;
+    filter: opacity(0.8);
+    word-break: break-all;
+    animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .3s;
+}
+.PN2U-buttons{
+    opacity: 0;
+    animation: PN2U-anim-text-in 1s cubic-bezier(0.1, 1, 0, 1) forwards .4s;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: space-around;
+    align-items: stretch;
+    height: 24px;
+}
+.PN2U-buttons:empty{
+    display: none!important;
+}
+.PN2U-buttons>button{
+    transition: all .3s ease;
+    border:none;
+    background: rgba(255, 255, 255, 0.358);
+    flex: 1;
+    border-left: 2px solid rgba(255, 255, 255, 0.436);
+    text-shadow: 0px 0px 3px #00000063;
+}
+.PN2U-buttons>button:first-child{
+    border-left: none;
+}
+.PN2U-buttons>button:hover{
+    background: rgba(255, 255, 255, 0.557);
+}
+.PN2U-timer{
+    width: 100%;
+    height:2px;
+    background: rgba(255, 255, 255, 0.358);
+}
+.PN2U-timer::after{
+    content: " ";
+    display: block;
+    transition: all .3s;
+    height:2px;
+    width: 50%;
+    background-color: white;
+}
+.PN2-pause-anim .PN2U-timer,
+.PN2-pause-anim .PN2U-timer::after,
+.PN2U-container:hover .PN2U-timer::after{
+    animation-play-state:paused!important;
+}
+.PN2U-theme-white{
+    background: rgb(255, 255, 255);
+    color: black;
+}
+
+.PN2U-theme-dark{
+    background: rgb(82, 82, 82);
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-dark button{
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-dark 
+.PN2U-buttons{
+    background: rgb(28, 28, 28);
+}
+
+.PN2U-theme-blue{
+    background: rgb(29, 153, 255);
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-blue button{
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-blue 
+.PN2U-buttons{
+    background: rgba(255, 255, 255, 0.046);
+}
+
+.PN2U-theme-green{
+    background: rgb(37, 196, 37);
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-green button{
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-green 
+.PN2U-buttons{
+    background: rgba(255, 255, 255, 0.046);
+}
+
+.PN2U-theme-red{
+    background: rgb(185, 13, 13);
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-red button{
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-red 
+.PN2U-buttons{
+    background: rgba(255, 255, 255, 0.046);
+}
+
+.PN2U-theme-yellow{
+    background: rgb(217, 192, 3);
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-yellow button{
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-yellow 
+.PN2U-buttons{
+    background: rgba(255, 255, 255, 0.046);
+}
+
+.PN2U-theme-orange{
+    background: rgb(217, 131, 3);
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-orange button{
+    color: rgb(255, 255, 255);
+}
+.PN2U-theme-orange 
+.PN2U-buttons{
+    background: rgba(255, 255, 255, 0.046);
+}
+@keyframes PN2U-anim-in {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+@keyframes PN2U-anim-out {
+    from {
+        transform: scale(1);
+        opacity: 0;
+    }
+    to {
+        transform: scale(0);
+        opacity: 1;
+    }
+}
+@keyframes PN2U-anim-text-in {
+    from {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+@keyframes PN2U-anim-progress{
+    from{
+        width: 0%;
+    }
+    to{
+        width: 100%;
+    }
+}
