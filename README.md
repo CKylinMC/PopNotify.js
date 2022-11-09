@@ -22,6 +22,18 @@ popNotify.show("Hello","world","info");
 > 添加 `popNotify.show()` 方法是因为原 `popNotify.notify()` 的参数顺序不合理，但是为了不破坏已经这样调用的程序，添加了新的方法。
 > `show()`与`notify()`除了参数顺序以外，还把超时的单位由毫秒改为了秒，除了这两点以外`show()`与`notify()`完全一致。
 
+1.2重构版本后，还可以使用：
+```js
+popNotifyUnit.create({
+ style:"info",
+ title:"Hello",
+ content:"world",
+ register:true
+}).show();
+```
+
+> 使用此种方式为先创建通知项目随后再添加到队列的方式，并且支持对象传入以避免被参数顺序影响使用。
+
 ### 参数解释
 ```js
 popNotify.notify(title, content, timeout, onclick, style)
@@ -83,4 +95,45 @@ popNotify.close(String id || HTMLElement e)
 或者，想要直接关闭所有的通知：
 ```js
 popNotify.closeAll()
+```
+
+## 通知控制与重新打开
+
+在1.2版本后，允许对通知进行重新打开(重新打开仅支持默认队列)。
+```js
+// 获得通知项目：
+let unit = popNotify.info('title','content');
+// 或
+popNotifyUnit.create({
+ style:"info",
+ title:"Hello",
+ content:"world",
+ register:true
+}).show();
+
+// 当通知显示已结束后重新打开：
+unit.show();
+// 或
+unit.replay("success","title","content");
+// 或
+unit.replay({style:"success",title:"title",content:"content"});
+
+// 随时设置标题、内容与样式
+unit.setStyle('error');
+unit.setTitle('错误');
+unit.setContent('出现了一个错误');
+
+// 修改超时模式
+unit.setTimer(5000);
+
+// 手动进度条
+let progress = unit.setProgress(/* 0, 100, true */);
+progress.setAutoClose(false);
+progress.set(50);
+progress.step(10);
+progress.calcProgress(100,1000);
+progress.done();
+
+// 切换回超时模式
+unit.setTimer();
 ```
