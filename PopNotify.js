@@ -233,7 +233,7 @@ class popNotifyUnit {
     }
 }
 
-class PopMan {
+class PopNotify {
     queue = [];
     closingAll = false;
     topOffset = 0;
@@ -333,4 +333,4 @@ class PopMan {
         this.closingAll = false;
     }
 }
-window.popNotify = new PopMan();
+window.popNotify = new PopNotify();
